@@ -135,7 +135,6 @@ void main() {
           ),
           showLocalSystemAppsProvider.overrideWith((ref) => true),
           updatesModelProvider.overrideWith((_) => mockUpdatesModel),
-          snapDataProvider.overrideWith((_, __) => snapData)
         ],
         child: const ManagePage(),
       ),

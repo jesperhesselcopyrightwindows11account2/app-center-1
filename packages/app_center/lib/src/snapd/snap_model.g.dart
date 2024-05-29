@@ -6,7 +6,7 @@ part of 'snap_model.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$snapPackageHash() => r'e80a9856b272cd5fbd2cea90302a09ecdc97c124';
+String _$snapPackageHash() => r'6f5325f1fef2e4336b00c867bcb2f5bee9eb6e06';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,8 +29,7 @@ class _SystemHash {
   }
 }
 
-abstract class _$SnapPackage
-    extends BuildlessAutoDisposeAsyncNotifier<SnapData> {
+abstract class _$SnapPackage extends BuildlessAsyncNotifier<SnapData> {
   late final String snapName;
 
   FutureOr<SnapData> build({
@@ -82,7 +81,7 @@ class SnapPackageFamily extends Family<AsyncValue<SnapData>> {
 
 /// See also [SnapPackage].
 class SnapPackageProvider
-    extends AutoDisposeAsyncNotifierProviderImpl<SnapPackage, SnapData> {
+    extends AsyncNotifierProviderImpl<SnapPackage, SnapData> {
   /// See also [SnapPackage].
   SnapPackageProvider({
     required String snapName,
@@ -138,8 +137,7 @@ class SnapPackageProvider
   }
 
   @override
-  AutoDisposeAsyncNotifierProviderElement<SnapPackage, SnapData>
-      createElement() {
+  AsyncNotifierProviderElement<SnapPackage, SnapData> createElement() {
     return _SnapPackageProviderElement(this);
   }
 
@@ -157,13 +155,13 @@ class SnapPackageProvider
   }
 }
 
-mixin SnapPackageRef on AutoDisposeAsyncNotifierProviderRef<SnapData> {
+mixin SnapPackageRef on AsyncNotifierProviderRef<SnapData> {
   /// The parameter `snapName` of this provider.
   String get snapName;
 }
 
 class _SnapPackageProviderElement
-    extends AutoDisposeAsyncNotifierProviderElement<SnapPackage, SnapData>
+    extends AsyncNotifierProviderElement<SnapPackage, SnapData>
     with SnapPackageRef {
   _SnapPackageProviderElement(super.provider);
 

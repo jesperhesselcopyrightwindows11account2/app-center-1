@@ -11,7 +11,8 @@ import 'package:ubuntu_service/ubuntu_service.dart';
 
 part 'snap_model.g.dart';
 
-@riverpod
+//@riverpod
+@Riverpod(keepAlive: true)
 class SnapPackage extends _$SnapPackage {
   late final _snapd = getService<SnapdService>();
 
@@ -24,14 +25,22 @@ class SnapPackage extends _$SnapPackage {
       if (e.kind != 'snap-not-found') rethrow;
     }
 
-    final storeSnap = ref.watch(storeSnapProvider(snapName)).value;
+    var storeSnap = ref.watch(storeSnapProvider(snapName)).value;
     if (localSnap == null) {
-      await ref.read(storeSnapProvider(snapName).future);
+      storeSnap = await ref.read(storeSnapProvider(snapName).future);
     }
+    // TODO: Should this be the last or first change, which order is it populated in?
+    final activeChangeId =
+        (await _snapd.getChanges(name: snapName)).firstOrNull?.id;
+    if (activeChangeId != null) {
+      unawaited(_listenUntilDone(activeChangeId, snapName, ref));
+    }
+
     return SnapData(
       name: snapName,
       localSnap: localSnap,
       storeSnap: storeSnap,
+      activeChangeId: activeChangeId,
     );
   }
 
@@ -110,6 +119,7 @@ class SnapPackage extends _$SnapPackage {
       SnapAction.open =>
         launcher?.isLaunchable ?? false ? launcher!.open : null,
       SnapAction.remove => remove,
+      // TODO: This must surely be wrong?
       SnapAction.switchChannel =>
         state.valueOrNull?.storeSnap != null ? refresh : null,
       SnapAction.update =>
@@ -160,7 +170,7 @@ final progressProvider =
   return streamController.stream;
 });
 
-/// Provides the active change, if any, for a given snap.
+/// Provides the active change, if any, for a given changeId.
 final activeChangeProvider =
     StateProvider.family<SnapdChange?, String?>((ref, id) {
   if (id == null) return null;

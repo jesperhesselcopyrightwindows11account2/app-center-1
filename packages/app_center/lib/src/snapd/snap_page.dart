@@ -358,20 +358,15 @@ class _SnapActionButtons extends ConsumerWidget {
           child: IntrinsicWidth(
             child: ListTile(
               mouseCursor: SystemMouseCursors.click,
-              leading: action.icon != null
-                  ? Icon(
-                      action.icon,
-                      color: color,
-                    )
-                  : null,
+              leading:
+                  action.icon != null ? Icon(action.icon, color: color) : null,
               title: Text(
                 action.label(l10n),
                 style: TextStyle(color: color),
               ),
             ),
           ),
-          onPressed: () =>
-              snapNotifier.callback(ref, primaryAction, snapLauncher),
+          onPressed: () => snapNotifier.callback(ref, action, snapLauncher),
         );
       }).toList(),
       builder: (context, controller, child) => YaruOptionButton(
